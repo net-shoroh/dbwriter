@@ -126,6 +126,10 @@ func libPQWrite(db *sql.DB, data []Data) error {
 	}
 
 	if err := txn.Commit(); err != nil {
+		if rollErr := txn.Rollback(); rollErr != nil {
+			return rollErr
+		}
+
 		return err
 	}
 
@@ -174,6 +178,10 @@ func gormWrite(db *gorm.DB, data []Data) error {
 	}
 
 	if err := tx.Commit().Error; err != nil {
+		if rollErr := tx.Rollback().Error; rollErr != nil {
+			return rollErr
+		}
+
 		return err
 	}
 
@@ -204,6 +212,10 @@ func gormWriteSlice(db *gorm.DB, data []Data) error {
 	}
 
 	if err := tx.Commit().Error; err != nil {
+		if rollErr := tx.Rollback().Error; rollErr != nil {
+			return rollErr
+		}
+
 		return err
 	}
 
