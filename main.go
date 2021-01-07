@@ -155,12 +155,15 @@ func gormConnect(dsn string, prepare bool) (*gorm.DB, error) {
 	}
 
 	sqlDB, err := db.DB()
+	if err != nil {
+		return db, err
+	}
 
 	sqlDB.SetMaxIdleConns(DBPOOL)
 	sqlDB.SetMaxOpenConns(DBPOOL)
 	sqlDB.SetConnMaxLifetime(LIFETIME)
 
-	return db, err
+	return db, nil
 }
 
 func gormWrite(db *gorm.DB, data []Data) error {
